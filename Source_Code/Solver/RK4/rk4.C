@@ -1,6 +1,9 @@
-#include"rk.h"
+#include <vector>
+#include "rk.h"
+#include "vecdef.h"
 
-reaction::solve_rxn(vector<double> sp, double end_time, double dt){
+reaction::solve_rxn(std::vector<double> sp, double end_time, double dt){
+  reaction(sp.size());
   for (int i = 0; i < iter; i++){
     sp1 = sp;
     calc_change(k1,sp1,dt);

@@ -1,6 +1,6 @@
 #include <vector>
-#include "rk.h"
-#include "vecdef.h"
+#include "../../Utilities/vecdef.h"
+#include "rk4.h"
 
 reaction::solve_rxn(std::vector<double> sp, double end_time, double dt){
   reaction(sp.size());

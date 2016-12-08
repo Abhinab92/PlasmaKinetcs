@@ -1,12 +1,13 @@
 #include <cmath>
 #include <sstream>
 #include <fstream>
+#include <iomanip>
 #include "utility.h"
 
-std::string species_info = "methane_air_plasma_without_3rdbody.txt";
-double Te = 100.0*11604.0 //in K
-double Tg = 300.0 // in K
-double end_time = 1.0e-6 // in s
+//std::string species_info = ;
+double Te = 100.0*11604.0; //in K
+double Tg = 300.0; // in K
+double end_time = 1.0e-6; // in s
 double dt = 1.0e-9; // in s
 int iter = int(end_time/dt);
 double R = 8.314; // Gas constat in J/mol.K
@@ -23,8 +24,8 @@ int wf = 10; // Frequency of writing output to file
 void read_file();
 void solve_rxn();
 void calc_change(double1D, double1D);
-void write_file();
-void calc_temp();
+void write_file(int);
+void calc_temp(double1D);
 
 int main(){
   read_file();
@@ -33,7 +34,8 @@ int main(){
 }
 
 void read_file(){
-  ifstream myfile;
+	double react1, react2, react3, prod1, prod2, prod3;
+  std::ifstream myfile;
 	std::string line;
 	std::istringstream iss;
 	int temp, numreact, numproduct;
@@ -42,7 +44,7 @@ void read_file(){
 	data.resize(4);
 	std::string a1, a2, a3, a4, a5, a6, p1, p2 , p3, p4, p5, asname;
 	double as;
-  myfile.open(species_info);
+  myfile.open("methane_air_plasma_without_3rdbody.txt");
 	getline(myfile,line);
 	while(!myfile.eof()){
 		getline(myfile,line);
@@ -60,7 +62,7 @@ void read_file(){
 		getline(myfile,line);
 		iss(line);
 		iss >> temp;
-		for (int i = 0; i < temp i++){
+		for (int i = 0; i < temp; i++){
 			getline(myfile,line);
 			iss(line);
 			iss >> temp >> numreact >> numproduct;
@@ -154,8 +156,8 @@ void read_file(){
 			data.clear();
 			data.resize(4);
 			iss >> data[0] >> data[1] >> data[2] >> data[3];
-			data[2] = 0.0 - data[2];
-			data[0] = 0.0 - data[0];
+			data[2] = double(0) - data[2];
+			data[0] = double(0) - data[0];
 			if (numreact == 1){
 				data.push_back(react1);
 				K[react1].push_back(double1D());
@@ -180,7 +182,7 @@ void read_file(){
 				K[react3].push_back(double1D());
 				K[react3][K[react3].size()-1].push_back(data);
 			}
-			data[0] = 0.0 - data[0];
+			data[0] = double(0) - data[0];
 			if (numproduct == 1){
 				K[prod1].push_back(double1D());
 				K[prod1][K[prod1].size()-1].push_back(data);
@@ -214,7 +216,7 @@ void read_file(){
   myfile.close();
 	std::ofstream myfile1;
 	myfile1.open("Output.txt");
-	myfile1 << "Electron temperature : " << Te/11604.0 << " eV \n";
+	myfile1 << "Electron temperature : " << Te/double(11604) << " eV \n";
 	myfile1 << "Time (s)" << "\t" << "Gas Temperature (K)";
 	for (int i = 0; i < size; i++){
 		myfile1 << "\t" << species[i];
@@ -232,18 +234,18 @@ void solve_rxn(){
   k2.resize(size);
   k3.resize(size);
   k4.resize(size);
-  write_file();
+  write_file(-1);
   for (int i = 0; i < iter; i++){
     //sp1 = sp;
     calc_change(k1,sp);
-    sp_temp = sp + k1*(dt/2.0);
+    sp_temp = sp + k1*(dt/double(2));
     calc_change(k2,sp_temp);
-		sp_temp = sp + k2*(dt/2.0);
+		sp_temp = sp + k2*(dt/double(2));
     calc_change(k3,sp_temp);
 		sp_temp = sp + k3*dt;
     calc_change(k4,sp_temp);
-    k = k1/6.0 + k2/3.0 + k3/3.0 + k4/6.0;
-    sp += k*dt;
+    k = k1/double(6) + k2/double(3) + k3/double(3) + k4/double(6);
+    sp = sp + k*dt;
 		calc_temp(k);
     if (i%wf == (wf-1)){
       write_file(i);
@@ -253,11 +255,11 @@ void solve_rxn(){
 
 void calc_change(double1D t_k, double1D t_s){
 	double temp;
-  for (int x = 0; x < K.size(); x++){
+  for (unsigned int x = 0; x < K.size(); x++){
     t_k[x] = 0.0;
-    for (int y = 0; y < K[i].size(); y++){
+    for (unsigned int y = 0; y < K[x].size(); y++){
       temp = K[x][y][0]*pow(300.0/Tg,K[x][y][1])*exp(K[x][y][2]/(R*Tg))*pow(300.0/Te,K[x][y][3]);
-      for (int z = 4; z < K[x][y].size(); z++){
+      for (unsigned int z = 4; z < K[x][y].size(); z++){
         temp *= t_s[K[x][y][z]];
       }
       t_k[x] += temp;
@@ -277,7 +279,7 @@ void calc_temp(double1D k){
 	Tg += (dnE*n/nCp*dt*dt);
 }
 
-void write_file(int it = -1){
+void write_file(int it){
   std::ofstream myfile;
   std::stringstream stream;
   myfile.open("Output.txt", std::ofstream::app);

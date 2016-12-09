@@ -1,6 +1,7 @@
 #include <cmath>
 #include <sstream>
 #include <fstream>
+#include <iostream>
 #include <iomanip>
 #include "utility.h"
 
@@ -37,34 +38,33 @@ void read_file(){
 	double react1, react2, react3, prod1, prod2, prod3;
   std::ifstream myfile;
 	std::string line;
-	std::istringstream iss;
 	int temp, numreact, numproduct;
 	string1D secspecies;
 	double1D sec, data;
 	data.resize(4);
 	std::string a1, a2, a3, a4, a5, a6, p1, p2 , p3, p4, p5, asname;
-	double as;
+	//double as;
   myfile.open("methane_air_plasma_without_3rdbody.txt");
 	getline(myfile,line);
 	while(!myfile.eof()){
 		getline(myfile,line);
-		iss(line);
-		iss >> size;
+		std::istringstream iss1(line);
+		iss1 >> size;
 		getline(myfile,line);
 		getline(myfile,line);
 		for (int i = 0; i < size; i++){
 			getline(myfile,line);
-			iss(line);
-			iss >> temp >> species[i] >> Cp[i] >> E[i];
+			std::istringstream iss2(line);
+			iss2 >> temp >> species[i] >> Cp[i] >> E[i];
 		}
 		getline(myfile,line);
 		getline(myfile,line);
 		getline(myfile,line);
-		iss(line);
+		std::istringstream iss(line);
 		iss >> temp;
 		for (int i = 0; i < temp; i++){
 			getline(myfile,line);
-			iss(line);
+			std::istringstream iss(line);
 			iss >> temp >> numreact >> numproduct;
 			temp = 0;
 			if (numreact == 1){
@@ -161,45 +161,137 @@ void read_file(){
 			if (numreact == 1){
 				data.push_back(react1);
 				K[react1].push_back(double1D());
-				K[react1][K[react1].size()-1].push_back(data);
+				K[react1][K[react1].size()-1].push_back(data[0]);
+				K[react1][K[react1].size()-1].push_back(data[1]);
+				K[react1][K[react1].size()-1].push_back(data[2]);
+				K[react1][K[react1].size()-1].push_back(data[3]);
+				K[react1][K[react1].size()-1].push_back(data[4]);
 			}
 			else if (numreact == 2){
 				data.push_back(react1);
 				data.push_back(react2);
 				K[react1].push_back(double1D());
-				K[react1][K[react1].size()-1].push_back(data);
+				K[react1][K[react1].size()-1].push_back(data[0]);
+				K[react1][K[react1].size()-1].push_back(data[1]);
+				K[react1][K[react1].size()-1].push_back(data[2]);
+				K[react1][K[react1].size()-1].push_back(data[3]);
+				K[react1][K[react1].size()-1].push_back(data[4]);
+				K[react1][K[react1].size()-1].push_back(data[5]);
 				K[react2].push_back(double1D());
-				K[react2][K[react2].size()-1].push_back(data);
+				K[react2][K[react2].size()-1].push_back(data[0]);
+				K[react2][K[react2].size()-1].push_back(data[1]);
+				K[react2][K[react2].size()-1].push_back(data[2]);
+				K[react2][K[react2].size()-1].push_back(data[3]);
+				K[react2][K[react2].size()-1].push_back(data[4]);
+				K[react2][K[react2].size()-1].push_back(data[5]);
 			}
 			else{
 				data.push_back(react1);
 				data.push_back(react2);
 				data.push_back(react3);
-				K[react1].push_back(double1D());
-				K[react1][K[react1].size()-1].push_back(data);
+				K[react1][K[react1].size()-1].push_back(data[0]);
+				K[react1][K[react1].size()-1].push_back(data[1]);
+				K[react1][K[react1].size()-1].push_back(data[2]);
+				K[react1][K[react1].size()-1].push_back(data[3]);
+				K[react1][K[react1].size()-1].push_back(data[4]);
+				K[react1][K[react1].size()-1].push_back(data[5]);
+				K[react1][K[react1].size()-1].push_back(data[6]);
 				K[react2].push_back(double1D());
-				K[react2][K[react2].size()-1].push_back(data);
+				K[react2][K[react2].size()-1].push_back(data[0]);
+				K[react2][K[react2].size()-1].push_back(data[1]);
+				K[react2][K[react2].size()-1].push_back(data[2]);
+				K[react2][K[react2].size()-1].push_back(data[3]);
+				K[react2][K[react2].size()-1].push_back(data[4]);
+				K[react2][K[react2].size()-1].push_back(data[5]);
+				K[react2][K[react2].size()-1].push_back(data[6]);
 				K[react3].push_back(double1D());
-				K[react3][K[react3].size()-1].push_back(data);
+				K[react3][K[react3].size()-1].push_back(data[0]);
+				K[react3][K[react3].size()-1].push_back(data[1]);
+				K[react3][K[react3].size()-1].push_back(data[2]);
+				K[react3][K[react3].size()-1].push_back(data[3]);
+				K[react3][K[react3].size()-1].push_back(data[4]);
+				K[react3][K[react3].size()-1].push_back(data[5]);
+				K[react3][K[react3].size()-1].push_back(data[6]);
 			}
 			data[0] = double(0) - data[0];
 			if (numproduct == 1){
 				K[prod1].push_back(double1D());
-				K[prod1][K[prod1].size()-1].push_back(data);
+				if (numreact == 1){
+					K[prod1][K[prod1].size()-1].push_back(data[0]);
+					K[prod1][K[prod1].size()-1].push_back(data[1]);
+					K[prod1][K[prod1].size()-1].push_back(data[2]);
+					K[prod1][K[prod1].size()-1].push_back(data[3]);
+					K[prod1][K[prod1].size()-1].push_back(data[4]);
+				}
+				else if (numreact == 2){
+					K[prod1][K[prod1].size()-1].push_back(data[0]);
+					K[prod1][K[prod1].size()-1].push_back(data[1]);
+					K[prod1][K[prod1].size()-1].push_back(data[2]);
+					K[prod1][K[prod1].size()-1].push_back(data[3]);
+					K[prod1][K[prod1].size()-1].push_back(data[4]);
+					K[prod1][K[prod1].size()-1].push_back(data[5]);
+				}
+				else{
+					K[prod1][K[prod1].size()-1].push_back(data[0]);
+					K[prod1][K[prod1].size()-1].push_back(data[1]);
+					K[prod1][K[prod1].size()-1].push_back(data[2]);
+					K[prod1][K[prod1].size()-1].push_back(data[3]);
+					K[prod1][K[prod1].size()-1].push_back(data[4]);
+					K[prod1][K[prod1].size()-1].push_back(data[5]);
+					K[prod1][K[prod1].size()-1].push_back(data[6]);
+				}
 			}
 			else if (numproduct == 2){
 				K[prod1].push_back(double1D());
-				K[prod1][K[prod1].size()-1].push_back(data);
+				K[prod1][K[prod1].size()-1].push_back(data[0]);
+				K[prod1][K[prod1].size()-1].push_back(data[1]);
+				K[prod1][K[prod1].size()-1].push_back(data[2]);
+				K[prod1][K[prod1].size()-1].push_back(data[3]);
+				K[prod1][K[prod1].size()-1].push_back(data[4]);
 				K[prod2].push_back(double1D());
-				K[prod2][K[prod2].size()-1].push_back(data);
+				K[prod2][K[prod2].size()-1].push_back(data[0]);
+				K[prod2][K[prod2].size()-1].push_back(data[1]);
+				K[prod2][K[prod2].size()-1].push_back(data[2]);
+				K[prod2][K[prod2].size()-1].push_back(data[3]);
+				K[prod2][K[prod2].size()-1].push_back(data[4]);
+				if (numreact == 2){
+					K[prod1][K[prod1].size()-1].push_back(data[5]);
+					K[prod2][K[prod2].size()-1].push_back(data[5]);
+				}
+				else if (numreact == 3){
+					K[prod1][K[prod1].size()-1].push_back(data[6]);
+					K[prod2][K[prod2].size()-1].push_back(data[6]);
+				}
 			}
 			else{
 				K[prod1].push_back(double1D());
-				K[prod1][K[prod1].size()-1].push_back(data);
+				K[prod1][K[prod1].size()-1].push_back(data[0]);
+				K[prod1][K[prod1].size()-1].push_back(data[1]);
+				K[prod1][K[prod1].size()-1].push_back(data[2]);
+				K[prod1][K[prod1].size()-1].push_back(data[3]);
+				K[prod1][K[prod1].size()-1].push_back(data[4]);
 				K[prod2].push_back(double1D());
-				K[prod2][K[prod2].size()-1].push_back(data);
+				K[prod2][K[prod2].size()-1].push_back(data[0]);
+				K[prod2][K[prod2].size()-1].push_back(data[1]);
+				K[prod2][K[prod2].size()-1].push_back(data[2]);
+				K[prod2][K[prod2].size()-1].push_back(data[3]);
+				K[prod2][K[prod2].size()-1].push_back(data[4]);
 				K[prod3].push_back(double1D());
-				K[prod3][K[prod3].size()-1].push_back(data);
+				K[prod3][K[prod3].size()-1].push_back(data[0]);
+				K[prod3][K[prod3].size()-1].push_back(data[1]);
+				K[prod3][K[prod3].size()-1].push_back(data[2]);
+				K[prod3][K[prod3].size()-1].push_back(data[3]);
+				K[prod3][K[prod3].size()-1].push_back(data[4]);
+				if (numreact == 2){
+					K[prod1][K[prod1].size()-1].push_back(data[5]);
+					K[prod2][K[prod2].size()-1].push_back(data[5]);
+					K[prod3][K[prod3].size()-1].push_back(data[5]);
+				}
+				else if (numreact == 3){
+					K[prod1][K[prod1].size()-1].push_back(data[6]);
+					K[prod2][K[prod2].size()-1].push_back(data[6]);
+					K[prod3][K[prod3].size()-1].push_back(data[6]);
+				}
 			}
 			/*if (temp == 1){
 				iss >> numsec;
@@ -247,6 +339,7 @@ void solve_rxn(){
     k = k1/double(6) + k2/double(3) + k3/double(3) + k4/double(6);
     sp = sp + k*dt;
 		calc_temp(k);
+		std::cout << "Iteration : " << iter << "\n";
     if (i%wf == (wf-1)){
       write_file(i);
     }
